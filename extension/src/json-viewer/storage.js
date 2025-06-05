@@ -1,63 +1,63 @@
-var defaults = require('./options/defaults');
-var merge = require('./merge');
+const defaults = require('./options/defaults');
+const merge = require('./merge');
 
-var OLD_NAMESPACE = "options";
-var NAMESPACE = "v2.options";
+const NAMESPACE = "v2.options";
+const chrome = require('chrome-framework');
 
 module.exports = {
-  save: function(obj) {
-    localStorage.setItem(NAMESPACE, JSON.stringify(obj));
-  },
-
-  load: function() {
-    var optionsStr = localStorage.getItem(NAMESPACE);
-    optionsStr = this.restoreOldOptions(optionsStr);
-
-    options = optionsStr ? JSON.parse(optionsStr) : {};
-    options.theme = options.theme || defaults.theme;
-    options.addons = options.addons ? JSON.parse(options.addons) : {};
-    options.addons = merge({}, defaults.addons, options.addons)
-    options.structure = options.structure ? JSON.parse(options.structure) : defaults.structure;
-    options.style = options.style && options.style.length > 0 ? options.style : defaults.style;
-    return options;
-  },
-
-  restoreOldOptions: function(optionsStr) {
-    var oldOptions = localStorage.getItem(OLD_NAMESPACE);
-    var options = null;
-
-    if (optionsStr === null && oldOptions !== null) {
-      try {
-        oldOptions = JSON.parse(oldOptions);
-        if(!oldOptions || typeof oldOptions !== "object") oldOptions = {};
-
-        options = {};
-        options.theme = oldOptions.theme;
-        options.addons = {
-          prependHeader: JSON.parse(oldOptions.prependHeader || defaults.addons.prependHeader),
-          maxJsonSize: parseInt(oldOptions.maxJsonSize || defaults.addons.maxJsonSize, 10)
-        }
-
-        // Update to at least the new max value
-        if (options.addons.maxJsonSize < defaults.addons.maxJsonSize) {
-          options.addons.maxJsonSize = defaults.addons.maxJsonSize;
-        }
-
-        options.addons = JSON.stringify(options.addons);
-        options.structure = JSON.stringify(defaults.structure);
-        options.style = defaults.style;
-        this.save(options);
-
-        optionsStr = JSON.stringify(options);
-
-      } catch(e) {
-        console.error('[JSONViewer] error: ' + e.message, e);
-
-      } finally {
-        localStorage.removeItem(OLD_NAMESPACE);
+  save: function (obj) {
+    chrome.storage.local.set({ [NAMESPACE]: JSON.stringify(obj) }, () => {
+      if (chrome.runtime.lastError) {
+        console.error("[JSONViewer] Error saving options:", chrome.runtime.lastError);
+      } else {
+        console.log("[JSONViewer] Options saved successfully.");
       }
-    }
+    });
+  },
 
-    return optionsStr;
+  load: function (callback) {
+    const self = this
+    const options = this._createDefaultOptions();
+
+    // For MV3, we need to handle async storage but return defaults synchronously
+    if (!chrome?.storage?.local) return options
+
+    chrome.storage.local.get(NAMESPACE, function (result) {
+      if (chrome.runtime.lastError) {
+        console.error("[JSONViewer] Error loading options:", chrome.runtime.lastError);
+        callback(options)
+        return;
+      }
+
+      const storedOptions = JSON.parse(result[NAMESPACE] ?? '{}');
+      Object.assign(options, self._processOptions(storedOptions));
+      callback(options)
+    });
+
+  },
+
+  _createDefaultOptions: function () {
+    return {
+      theme: defaults.theme,
+      addons: merge({}, defaults.addons),
+      structure: defaults.structure,
+      style: defaults.style
+    };
+  },
+
+  _processOptions: function (options) {
+    if (!options) return this._createDefaultOptions();
+
+    const processed = {};
+    processed.theme = options.theme || defaults.theme;
+    processed.addons = options.addons ?
+      (typeof options.addons === 'string' ? JSON.parse(options.addons) : options.addons) :
+      {};
+    processed.addons = merge({}, defaults.addons, processed.addons);
+    processed.structure = options.structure ?
+      (typeof options.structure === 'string' ? JSON.parse(options.structure) : options.structure) :
+      defaults.structure;
+    processed.style = options.style && options.style.length > 0 ? options.style : defaults.style;
+    return processed;
   }
 }

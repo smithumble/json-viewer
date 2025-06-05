@@ -1,49 +1,30 @@
-var Promise = require('promise');
-var chrome = require("chrome-framework");
-var MAX_WAIT = 20;
-
 function loadCSS(opts) {
-  var url = chrome.extension.getURL(opts.path);
-
-  var link = document.createElement("link");
-  var sheets = document.styleSheets;
-  link.rel = "stylesheet";
-  link.href = url;
-  if (opts.id) link.id = opts.id;
-
-  document.head.appendChild(link);
-
-  var checkElement = document.createElement("div");
-  checkElement.setAttribute("class", opts.checkClass);
-  document.body.appendChild(checkElement);
-
-  var scheduleId = null;
-  var attempts = 0;
-
   return new Promise(function(resolve, reject) {
-    function scheduleCheck() {
-      var content = window.
-        getComputedStyle(checkElement, ":before").
-        getPropertyValue("content");
-
-      if (attempts > MAX_WAIT) {
-        return reject(
-          Error("fail to load css: '" + url + "', content loaded: " + content)
-        );
-      }
-
-      if (/loaded/.test(content)) {
-        cancelAnimationFrame(scheduleId);
-        document.body.removeChild(checkElement);
+    try {
+      const url = chrome.runtime.getURL(opts.path);
+      const link = document.createElement("link");
+      link.href = url;
+      link.type = "text/css";
+      link.rel = "stylesheet";
+      link.id = opts.id;
+      
+      link.onload = function() {
         resolve();
+      };
+      
+      link.onerror = function(e) {
+        console.error("[JSONViewer] Error loading CSS:", opts.path, e);
+        // Resolve anyway to continue with the process
+        resolve();
+      };
+      
+      document.getElementsByTagName("head")[0].appendChild(link);
 
-      } else {
-        attempts++;
-        scheduleId = requestAnimationFrame(scheduleCheck, 1);
-      }
+    } catch(e) {
+      console.error("[JSONViewer] Exception in loadCSS:", e);
+      // Resolve anyway to continue with the process
+      resolve();
     }
-
-    scheduleCheck();
   });
 }
 

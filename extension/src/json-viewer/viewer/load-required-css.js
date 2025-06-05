@@ -1,28 +1,35 @@
-var Promise = require('promise');
-var loadCss = require('../load-css');
-var themeDarkness = require('../theme-darkness');
+const loadCSS = require('../load-css');
+const themeDarkness = require('../theme-darkness');
 
 function loadRequiredCss(options) {
-  var theme = options.theme;
-  var loaders = [];
-  loaders.push(loadCss({
-    path: "assets/viewer.css",
-    checkClass: "json-viewer-css-check"
-  }));
+  return new Promise(function (resolve) {
+    const promises = [];
 
-  if (theme && theme !== "default") {
-    loaders.push(loadCss({
-      path: "themes/" + themeDarkness(theme) + "/" + theme + ".css",
-      checkClass: "theme-" + theme + "-css-check"
+    const theme = options.theme.replace(/ /g, "-");
+    promises.push(loadCSS({
+      path: "/assets/viewer.css",
+      id: "json-viewer-css"
     }));
-  }
 
-  return Promise.all(loaders).then(function() {
-    var style = document.createElement("style");
-    style.rel = "stylesheet";
-    style.type = "text/css";
-    style.innerHTML = options.style;
-    document.head.appendChild(style);
+    if (theme !== "default") {
+      const themePath = `/themes/${themeDarkness(theme)}/${theme}.css`;
+      promises.push(loadCSS({
+        path: themePath,
+        id: "json-viewer-theme-css"
+      }));
+    }
+
+    if (options.style?.length > 0) {
+      const style = document.createElement("style");
+      style.id = "json-viewer-custom-css";
+
+      // Use textContent instead of innerHTML for CSP compliance
+      style.textContent = options.style;
+
+      document.getElementsByTagName("head")[0].appendChild(style);
+    }
+
+    Promise.all(promises).then(() => resolve())
   });
 }
 

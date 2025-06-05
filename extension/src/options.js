@@ -16,13 +16,15 @@ var renderStructure = require('./json-viewer/options/render-structure');
 var renderStyle = require('./json-viewer/options/render-style');
 var bindSaveButton = require('./json-viewer/options/bind-save-button');
 var bindResetButton = require('./json-viewer/options/bind-reset-button');
+var getOptions = require('./json-viewer/viewer/get-options');
+
 
 function isValidJSON(pseudoJSON) {
   try {
     JSON.parse(pseudoJSON);
     return true;
 
-  } catch(e) {
+  } catch (e) {
     return false;
   }
 }
@@ -35,27 +37,27 @@ function renderVersion() {
 }
 
 function onLoaded() {
-  var currentOptions = Storage.load();
-
-  renderVersion();
-  renderThemeList(CodeMirror, currentOptions.theme);
-  var addonsEditor = renderAddons(CodeMirror, currentOptions.addons);
-  var structureEditor = renderStructure(CodeMirror, currentOptions.structure);
-  var styleEditor = renderStyle(CodeMirror, currentOptions.style);
-
-  bindResetButton();
-  bindSaveButton([addonsEditor, structureEditor, styleEditor], function(options) {
-    if (!isValidJSON(options.addons)) {
-      sweetAlert("Ops!", "\"Add-ons\" isn't a valid JSON", "error");
-
-    } else if (!isValidJSON(options.structure)) {
-      sweetAlert("Ops!", "\"Structure\" isn't a valid JSON", "error");
-
-    } else {
-      Storage.save(options);
-      sweetAlert("Success", "Options saved!", "success");
-    }
-  });
+  getOptions().then((options) => {
+    renderVersion();
+    renderThemeList(CodeMirror, options.theme);
+    var addonsEditor = renderAddons(CodeMirror, options.addons);
+    var structureEditor = renderStructure(CodeMirror, options.structure);
+    var styleEditor = renderStyle(CodeMirror, options.style);
+  
+    bindResetButton();
+    bindSaveButton([addonsEditor, structureEditor, styleEditor], function (options) {
+      if (!isValidJSON(options.addons)) {
+        sweetAlert("Ops!", "\"Add-ons\" isn't a valid JSON", "error");
+  
+      } else if (!isValidJSON(options.structure)) {
+        sweetAlert("Ops!", "\"Structure\" isn't a valid JSON", "error");
+  
+      } else {
+        Storage.save(options);
+        sweetAlert("Success", "Options saved!", "success");
+      }
+    });
+  })
 }
 
 document.addEventListener("DOMContentLoaded", onLoaded, false);

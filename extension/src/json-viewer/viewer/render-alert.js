@@ -1,31 +1,42 @@
-var loadCss = require('../load-css');
+const loadCSS = require('../load-css');
 
-function renderAlert(pre, options, content) {
-  var alertContainer = document.createElement("div");
-  alertContainer.className = "json-viewer-alert";
-  alertContainer.appendChild(content);
+function renderAlert(pre, options, content, timeout) {
+  loadCSS({ path: "/assets/viewer-alert.css", id: "json-viewer-alert-css" });
 
-  var closeBtn = document.createElement("a");
+  const alert = document.createElement("div");
+  alert.className = "json-viewer-alert";
+
+  const closeBtn = document.createElement("a");
   closeBtn.className = "close";
   closeBtn.href = "#";
   closeBtn.title = "Close";
-  closeBtn.innerHTML = "×";
-  closeBtn.onclick = function(e) {
+  // Use textContent instead of innerHTML for CSP compliance
+  closeBtn.textContent = "×";
+  closeBtn.onclick = function (e) {
     e.preventDefault();
-    alertContainer.parentNode.removeChild(alertContainer);
+    document.body.removeChild(alert);
   }
 
-  alertContainer.appendChild(closeBtn);
+  alert.appendChild(closeBtn);
 
-  loadCss({path: "assets/viewer-alert.css", checkClass: "json-viewer-alert"}).then(function() {
-    document.body.appendChild(alertContainer);
+  if (typeof content === "string") {
+    const contentElement = document.createElement("div");
+    // Use textContent instead of innerHTML for CSP compliance
+    contentElement.textContent = content;
+    alert.appendChild(contentElement);
+  } else {
+    alert.appendChild(content);
+  }
 
-  }).catch(function(e) {
-    alertContainer.hidden = false;
-    if (process.env.NODE_ENV === 'development') {
-      console.error('[JSONViewer] error: ' + e.message, e);
-    }
-  });
+  document.body.appendChild(alert);
+
+  if (timeout) {
+    setTimeout(function () {
+      if (document.body.contains(alert)) {
+        document.body.removeChild(alert);
+      }
+    }, timeout);
+  }
 }
 
 module.exports = renderAlert;

@@ -31,14 +31,14 @@ function oversizedJSON(pre, options, outsideViewer) {
     var container = document.createElement("div");
 
     var message = document.createElement("div");
-    message.innerHTML = "[JSONViewer] Content not highlighted due to oversize. " +
+    message.textContent = "[JSONViewer] Content not highlighted due to oversize. " +
     "Take a look at the console log for more information.";
     container.appendChild(message);
 
     var highlightAnyway = document.createElement("a");
     highlightAnyway.href = "#";
     highlightAnyway.title = "Highlight anyway!";
-    highlightAnyway.innerHTML = "Highlight anyway!";
+    highlightAnyway.textContent = "Highlight anyway!";
     highlightAnyway.onclick = function(e) {
       e.preventDefault();
       pre.hidden = true;
@@ -54,7 +54,6 @@ function oversizedJSON(pre, options, outsideViewer) {
 
 function prependHeader(options, outsideViewer, jsonText) {
   if (!outsideViewer && options.addons.prependHeader) {
-    options.structure.firstLineNumber = options.structure.firstLineNumber - 3
     var header = "// " + timestamp() + "\n";
     header += "// " + document.location.href + "\n\n";
     jsonText = header + jsonText;
@@ -63,7 +62,7 @@ function prependHeader(options, outsideViewer, jsonText) {
   return jsonText;
 }
 
-function highlightContent(pre, outsideViewer, ignoreLimit) {
+async function highlightContent(pre, outsideViewer, ignoreLimit) {
   getOptions().then(function(options) {
     if (!ignoreLimit && oversizedJSON(pre, options, outsideViewer)) {
       return pre.hidden = false;
@@ -94,9 +93,7 @@ function highlightContent(pre, outsideViewer, ignoreLimit) {
           )
         }
 
-        // "awaysFold" was a typo but to avoid any problems I'll keep it
-        // a while
-        if (options.addons.alwaysFold || options.addons.awaysFold) {
+        if (options.addons.alwaysFold || options.addons.alwaysFold) {
           highlighter.fold();
         }
 
