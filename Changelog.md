@@ -1,3 +1,8 @@
+# 1.0.0 - 2025-06-06
+
+* Migrate to Manifest V3
+* Update (most) dependencies to their latest versions
+
 # 0.18.1 - 2020-12-22
 
 * Update viewer-custom.scss #267 (fix blank space)
