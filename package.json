@@ -10,7 +10,6 @@
     "clean-webpack-plugin": "^4.0.0",
     "codemirror": "5.21.x",
     "css-loader": "^7.1.2",
-    "extract-text-webpack-plugin": "^3.0.2",
     "fs-extra": "^11.3.0",
     "mini-css-extract-plugin": "^2.9.2",
     "mousetrap": "^1.6.5",
