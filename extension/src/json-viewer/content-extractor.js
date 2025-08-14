@@ -25,6 +25,11 @@ function contentExtractor(pre, options) {
       var jsonParsed = JSON.parse(wrappedText);
       if (options.addons.sortKeys) jsonParsed = sortByKeys(jsonParsed);
 
+      if (options.addons.sortOrder) {
+        var keys = options.addons.sortOrder.split(',');
+        jsonParsed = sortBySpecifiedKeys(jsonParsed, keys);
+      }
+
       // Validate and decode json
       var decodedJson = JSON.stringify(jsonParsed);
       decodedJson = decodedJson.replace(REPLACE_WRAP_REGEX, "$1");
@@ -61,6 +66,30 @@ function sortByKeys(obj) {
     }
 
     return sorted;
+};
+
+// Recursively sort the keys of an object by the order of the keys in the keys array
+function sortBySpecifiedKeys(obj, keys) {
+  if (typeof obj !== 'object' || !obj) return obj;
+
+  var sorted;
+  if (Array.isArray(obj)) {
+    sorted = [];
+    obj.forEach(function(val, idx) {
+      sorted[idx] = sortBySpecifiedKeys(val, keys);
+    });
+    
+  } else {
+    sorted = {};
+    keys.forEach(function(key) {
+      if (obj[key]) sorted[key] = sortBySpecifiedKeys(obj[key], keys);
+    });
+    Object.keys(obj).forEach(function(key) {
+      if (!sorted[key]) sorted[key] = sortBySpecifiedKeys(obj[key], keys);
+    });
+  }
+
+  return sorted;
 };
 
 // Pass all numbers to json parser as strings in order to maintain precision,

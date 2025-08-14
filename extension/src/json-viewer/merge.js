@@ -7,7 +7,11 @@ function merge() {
   for (; i < il; i++) {
     for (key in arguments[i]) {
       if (arguments[i].hasOwnProperty(key)) {
-        obj[key] = arguments[i][key];
+        if (arguments[i][key].constructor === Object) {
+          obj[key] = merge({}, obj[key], arguments[i][key]);
+        } else {
+          obj[key] = arguments[i][key];
+        }
       }
     }
   }

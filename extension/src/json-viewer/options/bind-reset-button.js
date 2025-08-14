@@ -21,6 +21,7 @@ function bindResetButton() {
       options.theme = defaults.theme;
       options.addons = JSON.stringify(defaults.addons);
       options.structure = JSON.stringify(defaults.structure);
+      options.overrides = JSON.stringify(defaults.overrides);
       options.style = defaults.style;
 
       Storage.save(options);
