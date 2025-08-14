@@ -41,6 +41,7 @@ module.exports = {
       theme: defaults.theme,
       addons: merge({}, defaults.addons),
       structure: defaults.structure,
+      overrides: defaults.overrides,
       style: defaults.style
     };
   },
@@ -57,6 +58,10 @@ module.exports = {
     processed.structure = options.structure ?
       (typeof options.structure === 'string' ? JSON.parse(options.structure) : options.structure) :
       defaults.structure;
+    processed.overrides = options.overrides ?
+      (typeof options.overrides === 'string' ? JSON.parse(options.overrides) : options.overrides) :
+      defaults.overrides;
+    
     processed.style = options.style && options.style.length > 0 ? options.style : defaults.style;
     return processed;
   }

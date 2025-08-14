@@ -12,6 +12,7 @@ var merge = require('./merge');
 var defaults = require('./options/defaults');
 var URL_PATTERN = require('./url-pattern');
 var F_LETTER = 70;
+var LEFT_CLICK = 0;
 
 function Highlighter(jsonText, options) {
   this.options = options || {};
@@ -48,15 +49,23 @@ Highlighter.prototype = {
   },
 
   fold: function() {
-    var skippedRoot = false;
+    var currentLevel = 0;
     var firstLine = this.editor.firstLine();
     var lastLine = this.editor.lastLine();
 
     for (var line = firstLine; line <= lastLine; line++) {
-      if (!skippedRoot) {
-        if (/(\[|\{)/.test(this.editor.getLine(line).trim())) skippedRoot = true;
-
+      var lineInfo = this.editor.lineInfo(line);
+      if (this.options.addons.foldSkipArrays) {
+        var openRegex = /[\{]/g;
+        var closeRegex = /[\}]/g;
       } else {
+        var openRegex = /[\[\{]/g;
+        var closeRegex = /[\]\}]/g;
+      }
+      var openCount = (lineInfo.text.match(openRegex) || []).length;
+      var closeCount = (lineInfo.text.match(closeRegex) || []).length;
+      currentLevel += openCount - closeCount;
+      if (lineInfo.text.match(openRegex) && currentLevel >= (this.options.addons.foldLevel || 2)) {
         this.editor.foldCode({line: line, ch: 0}, null, "fold");
       }
     }
@@ -120,7 +129,7 @@ Highlighter.prototype = {
     this.editor.off("mousedown");
     this.editor.on("mousedown", function(cm, event) {
       var element = event.target;
-      if (element.classList.contains("cm-string-link")) {
+      if (element.classList.contains("cm-string-link") && event.button === LEFT_CLICK) {
         var url = element.getAttribute("data-url")
         var target = "_self";
         if (self.openLinksInNewWindow()) {
@@ -177,20 +186,14 @@ Highlighter.prototype = {
     }
 
     if (this.options.structure.readOnly) {
-      extraKeyMap["Enter"] = function(cm) {
-        CodeMirror.commands.findNext(cm);
-      }
-
-      extraKeyMap["Shift-Enter"] = function(cm) {
-        CodeMirror.commands.findPrev(cm);
-      }
-
+      extraKeyMap["Enter"] = this.findNext.bind(this);
+      extraKeyMap["Shift-Enter"] = this.findPrev.bind(this);
       extraKeyMap["Ctrl-V"] = extraKeyMap["Cmd-V"] = function(cm) {};
     }
 
     var nativeSearch = this.alwaysRenderAllContent();
-    extraKeyMap["Ctrl-F"] = nativeSearch ? false : this.openSearchDialog;
-    extraKeyMap["Cmd-F"] = nativeSearch ? false : this.openSearchDialog;
+    extraKeyMap["Ctrl-F"] = nativeSearch ? false : this.openSearchDialog.bind(this);
+    extraKeyMap["Cmd-F"] = nativeSearch ? false : this.openSearchDialog.bind(this);
     return extraKeyMap;
   },
 
@@ -205,7 +208,27 @@ Highlighter.prototype = {
 
   openSearchDialog: function(cm) {
     cm.setCursor({line: 0, ch: 0});
-    CodeMirror.commands.find(cm);
+    if (this.options.addons.persistentSearch) {
+      CodeMirror.commands.findPersistent(cm);
+    } else {
+      CodeMirror.commands.find(cm);
+    }
+  },
+
+  findNext: function(cm) {
+    if (this.options.addons.persistentSearch) {
+      CodeMirror.commands.findPersistentNext(cm);
+    } else {
+      CodeMirror.commands.findNext(cm);
+    }
+  },
+
+  findPrev: function(cm) {
+    if (this.options.addons.persistentSearch) {
+      CodeMirror.commands.findPersistentPrev(cm);
+    } else {
+      CodeMirror.commands.findPrev(cm);
+    }
   },
 
   alwaysRenderAllContent: function() {

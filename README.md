@@ -1,8 +1,6 @@
-![JSONViewer Logo](https://raw.githubusercontent.com/tulios/json-viewer/master/logo.png)
-
 # JSON Viewer
 
-![screenshot](https://raw.githubusercontent.com/tulios/json-viewer/master/screenshot.png)
+![screenshot](https://raw.githubusercontent.com/smithumble/json-viewer/master/screenshot.png)
 
 The most beautiful and customizable JSON/JSONP highlighter that your eyes have ever seen. It is a Chrome extension for printing JSON and JSONP.
 
@@ -38,11 +36,7 @@ Features:
 
 ## Installation
 
-### Install through Chrome Web Store
-
-[![https://chrome.google.com/webstore/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh](https://raw.githubusercontent.com/tulios/json-viewer/master/tryitnow.png)](https://chrome.google.com/webstore/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh)
-
-### Or compile and load by yourself
+### Compile and load
 
   1. It depends on node (version in `package.json` engines).
   2. `npm install --global yarn`
@@ -57,24 +51,12 @@ Features:
 
 ### JSON
 
-  [https://api.github.com/repos/tulios/json-viewer](https://api.github.com/repos/tulios/json-viewer)
-
-  [http://graph.facebook.com/github](http://graph.facebook.com/github)
-
-  [https//api.github.com](https://api.github.com)
-
-  [https://api.github.com/gists/public](https://api.github.com/gists/public)
-
-  Large files:
-
-  [https://raw.githubusercontent.com/ebrelsford/geojson-examples/master/596acres-02-18-2014.geojson](https://raw.githubusercontent.com/ebrelsford/geojson-examples/master/596acres-02-18-2014.geojson)
-
-  [https://api.takealot.com/rest/v-1-4-2/productlines?available=1&cat=10371&instock=1&rows=10&sort=score%20desc&start=0](https://api.takealot.com/rest/v-1-4-2/productlines?available=1&cat=10371&instock=1&rows=10&sort=score%20desc&start=0)
+  [https://api.github.com/repos/smithumble/json-viewer](https://api.github.com/repos/smithumble/json-viewer)
 
 ### JSONP
 
-  [http://freemusicarchive.org/api/get/curators.jsonp?api_key=60BLHNQCAOUFPIBZ&callback=test](http://freemusicarchive.org/api/get/curators.jsonp?api_key=60BLHNQCAOUFPIBZ&callback=test)
+  [https://api.github.com/repos/smithumble/json-viewer?callback=myCallback](https://api.github.com/repos/smithumble/json-viewer?callback=test)
 
 ## License
 
-See [LICENSE](https://github.com/tulios/json-viewer/blob/master/LICENSE) for more details.
+See [LICENSE](https://github.com/smithumble/json-viewer/blob/master/LICENSE) for more details.

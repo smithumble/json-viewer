@@ -4,8 +4,8 @@ var timestamp = require('./timestamp');
 var exposeJson = require('./viewer/expose-json');
 var renderExtras = require('./viewer/render-extras');
 var renderAlert = require('./viewer/render-alert');
-var getOptions = require('./viewer/get-options');
 var loadRequiredCss = require('./viewer/load-required-css');
+var getUrlOptions = require('./viewer/get-options-url');
 
 function oversizedJSON(pre, options, outsideViewer) {
   var jsonSize = pre.textContent.length;
@@ -63,7 +63,7 @@ function prependHeader(options, outsideViewer, jsonText) {
 }
 
 async function highlightContent(pre, outsideViewer, ignoreLimit) {
-  getOptions().then(function(options) {
+  getUrlOptions(document.location.href).then(function(options) {
     if (!ignoreLimit && oversizedJSON(pre, options, outsideViewer)) {
       return pre.hidden = false;
     }
@@ -93,7 +93,7 @@ async function highlightContent(pre, outsideViewer, ignoreLimit) {
           )
         }
 
-        if (options.addons.alwaysFold || options.addons.alwaysFold) {
+        if (options.addons.alwaysFold && options.addons.foldLevel) {
           highlighter.fold();
         }
 
