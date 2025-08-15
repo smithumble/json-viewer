@@ -10,9 +10,8 @@
 }
 
 .CodeMirror pre,
-.CodeMirror-lines .CodeMirror-cursor,
-div.CodeMirror-selected {
-  margin-left: 5px;
+.CodeMirror-lines .CodeMirror-cursor {
+  margin-left: -1px;
 }
 
 .CodeMirror-gutter-elt {
