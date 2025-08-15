@@ -1,2 +1,3 @@
-<?xml version="1.0"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve"><g fill-rule="evenodd" stroke="none" stroke-width="1"><g transform="translate(-511.000000, -465.000000)"><g transform="translate(511.500000, 465.000000)"><path d="M66.7414,31.6694 L83.4281,48.3562 L90.7286,41.0557 L66.7414,17.0685 L42.7542,41.0557 L50.0546,48.3562 L66.7414,31.6694 M66.7414,96.3306 L50.0546,79.6438 L42.7542,86.9443 L66.7414,110.931 L90.7286,86.9443 L83.4281,79.6438 L66.7414,96.3306 Z"/></g></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="-4 -4 22 22" fill="#000000" transform="rotate(90)">
+    <path d="M7 0a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-1.5 0V.75A.75.75 0 0 1 7 0M3.671 3.408a.5.5 0 0 1 .309.462v6.26a.5.5 0 0 1-.854.354L.26 7.617a.86.86 0 0 1 0-1.233l2.867-2.867a.5.5 0 0 1 .545-.109Zm6.658 0a.5.5 0 0 1 .545.109l2.867 2.867a.862.862 0 0 1 0 1.233l-2.867 2.867a.5.5 0 0 1-.854-.354V3.87a.5.5 0 0 1 .309-.462" clip-rule="evenodd"/>
+</svg>
