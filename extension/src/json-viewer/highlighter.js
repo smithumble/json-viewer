@@ -11,6 +11,7 @@ require('./search');
 var merge = require('./merge');
 var defaults = require('./options/defaults');
 var URL_PATTERN = require('./url-pattern');
+var FoldingWidget = require('./folding-widget');
 var F_LETTER = 70;
 var LEFT_CLICK = 0;
 
@@ -163,7 +164,12 @@ Highlighter.prototype = {
       indentUnit: 2,
       tabSize: 2,
       gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-      extraKeys: this.getExtraKeysMap()
+      extraKeys: this.getExtraKeysMap(),
+      foldOptions: {
+        widget: function(from, to) {
+          return FoldingWidget.createFoldingWidget(from, to, this.editor, this.options);
+        }.bind(this)
+      }
     }
 
     if (this.alwaysRenderAllContent()) {

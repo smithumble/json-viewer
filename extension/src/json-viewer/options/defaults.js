@@ -23,7 +23,9 @@ module.exports = {
     foldGutter: true,
     tabSize: 2,
     indentCStyle: false,
-    showArraySize: false
+    showArraySize: false,
+    showArraySizeFoldingMarkers: false,
+    showObjectSizeFoldingMarkers: false
   },
   overrides: [
     {
