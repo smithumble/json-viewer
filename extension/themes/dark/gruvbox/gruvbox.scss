@@ -184,3 +184,8 @@
 .cm-s-gruvbox .CodeMirror-hscrollbar::-webkit-scrollbar-thumb:hover {
   background: #928374; /* gray */
 }
+
+.cm-s-gruvbox .CodeMirror-dialog-top,
+.cm-s-gruvbox .CodeMirror-dialog-bottom {
+  border-color: #504945;
+}
