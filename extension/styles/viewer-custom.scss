@@ -65,8 +65,41 @@ html, body {
   }
 }
 
-// Hide search button when CodeMirror is hidden (raw mode)
 .CodeMirror[hidden] ~ .extras .icon.search,
 .CodeMirror[hidden] + .extras .icon.search {
   display: none;
+}
+
+.CodeMirror-dialog {
+  box-sizing: border-box;
+  backdrop-filter: blur(10px);
+  padding: 0 8px;
+  font-size: 14px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.CodeMirror-dialog label {
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+}
+
+.CodeMirror-dialog input {
+  padding: 5px 8px;
+  margin: 0 8px;
+  font-size: 14px;
+  min-width: 300px;
+}
+
+.CodeMirror-dialog .CodeMirror-search-hint {
+  font-size: 12px;
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+body:has(.CodeMirror-dialog) .extras,
+body:has(.CodeMirror-dialog) .CodeMirror > *:not(.CodeMirror-dialog) {
+  transform: translateY(44px) !important;
 }
