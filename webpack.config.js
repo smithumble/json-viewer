@@ -58,6 +58,10 @@ const webpackConfig = {
   module: {
     rules: [
       {
+        test: /\.svg$/,
+        type: 'asset/source'
+      },
+      {
         test: /\.(css|scss)$/,
         use: [
           MiniCssExtractPlugin.loader,
