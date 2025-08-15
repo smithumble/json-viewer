@@ -93,7 +93,7 @@ async function highlightContent(pre, outsideViewer, ignoreLimit) {
           )
         }
 
-        if (options.addons.alwaysFold && options.addons.foldLevel) {
+        if (options.addons.alwaysFold) {
           highlighter.fold();
         }
 

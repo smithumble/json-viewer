@@ -2,6 +2,7 @@ const chrome = require('chrome-framework');
 const svgGear = require('./svg-gear');
 const svgRaw = require('./svg-raw');
 const svgUnfold = require('./svg-unfold');
+const svgSearch = require('./svg-search');
 
 function renderExtras(pre, options, highlighter) {
   const extras = document.createElement("div");
@@ -59,11 +60,22 @@ function renderExtras(pre, options, highlighter) {
     pre.setAttribute('data-folded', true)
   }
 
+  pre.setAttribute('data-folded', options.addons.alwaysFold)
+
+  const searchLink = document.createElement("a");
+  searchLink.className = "json_viewer icon search";
+  searchLink.href = "#";
+  searchLink.title = "Search in JSON";
+  searchLink.innerHTML = svgSearch;
+  searchLink.onclick = function(e) {
+    e.preventDefault();
+    highlighter.openSearchDialog(highlighter.editor);
+  }
+  
   extras.appendChild(optionsLink);
   extras.appendChild(rawLink);
-
-  pre.setAttribute('data-folded', options.addons.alwaysFold || options.addons.alwaysFold)
   extras.appendChild(unfoldLink);
+  extras.appendChild(searchLink);
 
   document.body.appendChild(extras);
 }
