@@ -18,7 +18,14 @@ function getUrlOptionsOverrides(options, currentUrl) {
 
 function applyUrlOptionsOverrides(options, url) {
   const urlOptionsOverrides = getUrlOptionsOverrides(options, url);
-  return merge({}, options, urlOptionsOverrides);
+  const mergedOptions = merge({}, options, urlOptionsOverrides);
+  delete mergedOptions.overrides;
+
+  if (process.env.NODE_ENV === 'development') {
+    console.debug('[JSONViewer] Using options:', mergedOptions);
+  }
+  
+  return mergedOptions;
 }
 
 function getUrlOptions(url) {
