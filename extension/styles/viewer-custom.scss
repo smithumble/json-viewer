@@ -64,3 +64,9 @@ html, body {
     }
   }
 }
+
+// Hide search button when CodeMirror is hidden (raw mode)
+.CodeMirror[hidden] ~ .extras .icon.search,
+.CodeMirror[hidden] + .extras .icon.search {
+  display: none;
+}
