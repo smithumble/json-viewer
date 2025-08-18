@@ -70,12 +70,20 @@ html, body {
   display: none;
 }
 
+$search-dialog-height: 44px;
+
+body:has(.CodeMirror-dialog) .extras,
+body:has(.CodeMirror-dialog) .CodeMirror > *:not(.CodeMirror-dialog) {
+  max-height: calc(100% - #{$search-dialog-height});
+  transform: translateY($search-dialog-height);
+}
+
 .CodeMirror-dialog {
   box-sizing: border-box;
   backdrop-filter: blur(10px);
   padding: 0 8px;
   font-size: 14px;
-  height: 44px;
+  height: $search-dialog-height;
   display: flex;
   align-items: center;
 }
@@ -97,9 +105,4 @@ html, body {
   font-size: 12px;
   opacity: 0.8;
   flex-shrink: 0;
-}
-
-body:has(.CodeMirror-dialog) .extras,
-body:has(.CodeMirror-dialog) .CodeMirror > *:not(.CodeMirror-dialog) {
-  transform: translateY(44px) !important;
 }
